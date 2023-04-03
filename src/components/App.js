@@ -5,20 +5,25 @@ const App = () => {
   const [category, setCategory] = useState("general");
   const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState();
-  const apiKey='278d2471b53d8aa2b7390076f98f5905';
+  const apiKey = '06e7794face714f869df557523a37a76';
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoading(true);
-    fetch( `https://gnews.io/api/v4/top-headlines?category=${category}&apikey=${apiKey}&max=10&lang=en `)
-      .then(res=>res.json())
-      .then(data=>{
-        setNewsData(data.article);
-        setLoading(false);
-      })
-      .catch(err=>console.error(err));
-  },[category])
+    try {
 
-  const handleCategory=(e)=>{
+      fetch(`https://gnews.io/api/v4/top-headlines?category=${category}&apikey=${apiKey}&max=10&lang=en`)
+        .then(res => res.json())
+        .then(data => {
+          setNewsData(data.articles);
+          setLoading(false);
+        })
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }, [category])
+
+  const handleCategory = (e) => {
     //console.log(e.target.value);
     setCategory(e.target.value);
   }
@@ -35,28 +40,33 @@ const App = () => {
         <option value="entertainment">Entertainment</option>
         <option value="science">Science</option>
       </select>
-      {loading?(
+      {loading ? (
 
         <p className='loader'>Loading...</p>
-      ):(
-      <ol>
-        {newsData?.map((articles)=>(
-        <li key={articles.url}>
-          <img className='news-img' src={articles.image} alt=""/>
-          <section className='new-title-content-author'>
-            <h3 className='news-title'>{articles.title}</h3>
-            <section className='new-content-author'>
-              <p className='news-description'>{articles.description}</p>
-              <p className='news-source'><strong>Source:{articles.source}</strong> source name</p>
-            </section>
-          </section>
-        </li>
-        ))}
-      </ol>
+      ) : (
+        <ol>
+          {newsData?.map((articles) =>
 
-      )
+            Object.keys(articles).map((key) =>
+              key !== "publishedAt"?
+              (
 
-      }
+                  <li key={key}>
+                    <img className='news-img' src={articles.image} alt="img" />
+                    <section className='new-title-content-author'>
+                      <h3 className='news-title'>{articles.title}</h3>
+                      <section className='new-content-author'>
+                        <p className='news-description'>{articles.description}</p>
+                        <p className='news-source'><strong>Source:{articles.source.name}</strong> {articles.source.url}</p>
+                      </section>
+                    </section>
+                  </li>
+                ) : null
+            )
+            )
+            }
+        </ol>
+      )}
     </div>
   )
 }

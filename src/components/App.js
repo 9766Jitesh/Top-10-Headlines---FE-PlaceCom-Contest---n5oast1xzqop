@@ -45,13 +45,13 @@ const App = () => {
         <p className='loader'>Loading...</p>
       ) : (
         <ol>
-          {newsData?.map((articles) =>
+          {newsData?.map((articles,key) =>
 
-            Object.keys(articles).map((key) =>
-              key !== "publishedAt"?
-              (
+           
+              key !== "publishedAt" ?
+                (
 
-                  <li key={key}>
+                  <li keys={key}>
                     <img className='news-img' src={articles.image} alt="img" />
                     <section className='new-title-content-author'>
                       <h3 className='news-title'>{articles.title}</h3>
@@ -62,9 +62,9 @@ const App = () => {
                     </section>
                   </li>
                 ) : null
-            )
-            )
-            }
+            
+          )
+          }
         </ol>
       )}
     </div>
